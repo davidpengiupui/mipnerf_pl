@@ -343,9 +343,9 @@ def integrated_pos_enc(means_covs, min_deg, max_deg, diagonal=True):
         means, x_cov = means_covs
         num_dims = means.shape[-1]
         # [3, L]
-        basis = torch.cat([2 ** i * torch.eye(num_dims, device=means.device) for i in range(min_deg, max_deg)], 1)
-        y = torch.matmul(means, basis)  # [B, N, 3] * [3, 3L] = [B, N, 3L]
-        y_var = torch.sum((torch.matmul(x_cov, basis)) * basis, -2)
+        basis = torch.cat([2 ** i * torch.eye(num_dims, device=means.device) for i in range(min_deg, max_deg)], 1) # Equation 9
+        y = torch.matmul(means, basis)  # [B, N, 3] * [3, 3L] = [B, N, 3L] # Equation 10
+        y_var = torch.sum((torch.matmul(x_cov, basis)) * basis, -2) # Equation 10
     # sin(y + 0.5 * torch.tensor(np.pi)) = cos(y) 中国的学生脑子一定出现那句 “奇变偶不变 符号看象限”
     return expected_sin(torch.cat([y, y + 0.5 * torch.tensor(np.pi)], dim=-1), torch.cat([y_var] * 2, dim=-1))[0]
 
