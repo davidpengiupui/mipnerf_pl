@@ -268,7 +268,7 @@ def resample_along_rays(origins, directions, radii, t_samples, weights, randomiz
         weights_blur = 0.5 * (weights_max[..., :-1] + weights_max[..., 1:])
 
         # Add in a constant (the sampling function will renormalize the PDF).
-        weights = weights_blur + resample_padding
+        weights = weights_blur + resample_padding # Equation 18
 
         new_t_vals = sorted_piecewise_constant_pdf(
             t_samples,
