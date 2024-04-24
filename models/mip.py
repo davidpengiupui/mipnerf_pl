@@ -99,7 +99,7 @@ def cast_rays(t_samples, origins, directions, radii, ray_shape, diagonal=True):
     else:
         assert False
     means, covs = gaussian_fn(directions, t0, t1, radii, diagonal)
-    means = means + torch.unsqueeze(origins, dim=-2)
+    means = means + torch.unsqueeze(origins, dim=-2) # Equation 8: \mu = o + \mu_{t}d
     return means, covs
 
 
