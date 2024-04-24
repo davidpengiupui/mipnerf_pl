@@ -94,7 +94,7 @@ class MipNeRFSystem(LightningModule):
 
     def training_step(self, batch, batch_nb):
         rays, rgbs = batch
-        ret = self(rays, self.train_randomized, self.white_bkgd)
+        ret = self(rays, self.train_randomized, self.white_bkgd) # MipNerf.forward()
         # calculate loss for coarse and fine
         mask = rays.lossmult
         if self.hparams['loss.disable_multiscale_loss']:
