@@ -21,7 +21,7 @@ def distloss(weight, samples):
 
 def lift_gaussian(directions, t_mean, t_var, r_var, diagonal):
     """Lift a Gaussian defined along a ray to 3D coordinates."""
-    mean = torch.unsqueeze(directions, dim=-2) * torch.unsqueeze(t_mean, dim=-1)  # [B, 1, 3]*[B, N, 1] = [B, N, 3]
+    mean = torch.unsqueeze(directions, dim=-2) * torch.unsqueeze(t_mean, dim=-1)  # [B, 1, 3]*[B, N, 1] = [B, N, 3] # mean for t (\mu_{t})
     d_norm_denominator = torch.sum(directions ** 2, dim=-1, keepdim=True) + 1e-10
     # min_denominator = torch.full_like(d_norm_denominator, 1e-10)
     # d_norm_denominator = torch.maximum(min_denominator, d_norm_denominator)
