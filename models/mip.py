@@ -62,7 +62,7 @@ def conical_frustum_to_gaussian(directions, t0, t1, base_radius, diagonal, stabl
     Returns:
         a Gaussian (mean and covariance).
     """
-    if stable:
+    if stable: # Equation 7
         mu = (t0 + t1) / 2
         hw = (t1 - t0) / 2
         t_mean = mu + (2 * mu * hw ** 2) / (3 * mu ** 2 + hw ** 2)
