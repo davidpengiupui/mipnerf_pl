@@ -153,11 +153,11 @@ def sample_along_rays(origins, directions, radii, num_samples, near, far, random
         t_samples = near + (far - near) * t_samples
 
     if randomized:
-        mids = 0.5 * (t_samples[..., 1:] + t_samples[..., :-1])
-        upper = torch.cat([mids, t_samples[..., -1:]], -1)
-        lower = torch.cat([t_samples[..., :1], mids], -1)
+        mids = 0.5 * (t_samples[..., 1:] + t_samples[..., :-1]) # medians of nearby sampling points
+        upper = torch.cat([mids, t_samples[..., -1:]], -1) # upper bound
+        lower = torch.cat([t_samples[..., :1], mids], -1) # lower bound 
         t_rand = torch.rand(batch_size, num_samples + 1, device=origins.device)
-        t_samples = lower + (upper - lower) * t_rand
+        t_samples = lower + (upper - lower) * t_rand # use random values to adjust sampling points
     else:
         # Broadcast t_samples to make the returned shape consistent.
         t_samples = torch.broadcast_to(t_samples, [batch_size, num_samples + 1])
