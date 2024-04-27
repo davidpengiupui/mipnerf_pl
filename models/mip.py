@@ -283,8 +283,8 @@ def resample_along_rays(origins, directions, radii, t_samples, weights, randomiz
 def expected_sin(x, x_var):
     """Estimates mean and variance of sin(z), z ~ N(x, var)."""
     # When the variance is wide, shrink sin towards zero.
-    y = torch.exp(-0.5 * x_var) * torch.sin(x)  # [B, N, 2*3*L]
-    y_var = 0.5 * (1 - torch.exp(-2 * x_var) * torch.cos(2 * x)) - y ** 2
+    y = torch.exp(-0.5 * x_var) * torch.sin(x)  # [B, N, 2*3*L] # Equation 11 and 12
+    y_var = 0.5 * (1 - torch.exp(-2 * x_var) * torch.cos(2 * x)) - y ** 2 # ? not understand
     y_var = torch.maximum(torch.zeros_like(y_var), y_var)
     return y, y_var
 
@@ -335,10 +335,10 @@ def integrated_pos_enc(means_covs, min_deg, max_deg, diagonal=True):
         scales = torch.tensor([2 ** i for i in range(min_deg, max_deg)], device=means.device)  # [L]
         # [B, N, 1, 3] * [L, 1] = [B, N, L, 3]->[B, N, 3L]
         y = rearrange(torch.unsqueeze(means, dim=-2) * torch.unsqueeze(scales, dim=-1),
-                      'batch sample scale_dim mean_dim -> batch sample (scale_dim mean_dim)')
+                      'batch sample scale_dim mean_dim -> batch sample (scale_dim mean_dim)') # encode on means
         # [B, N, 1, 3] * [L, 1] = [B, N, L, 3]->[B, N, 3L]
         y_var = rearrange(torch.unsqueeze(covs_diag, dim=-2) * torch.unsqueeze(scales, dim=-1) ** 2,
-                          'batch sample scale_dim cov_dim -> batch sample (scale_dim cov_dim)')
+                          'batch sample scale_dim cov_dim -> batch sample (scale_dim cov_dim)') # encode on variances
     else:
         means, x_cov = means_covs
         num_dims = means.shape[-1]
