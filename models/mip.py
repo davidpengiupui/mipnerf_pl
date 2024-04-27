@@ -26,7 +26,7 @@ def lift_gaussian(directions, t_mean, t_var, r_var, diagonal):
     # min_denominator = torch.full_like(d_norm_denominator, 1e-10)
     # d_norm_denominator = torch.maximum(min_denominator, d_norm_denominator)
 
-    if diagonal:
+    if diagonal: # diagonal of the 3D position's covariance
         d_outer_diag = directions ** 2  # eq (16)
         null_outer_diag = 1 - d_outer_diag / d_norm_denominator
         t_cov_diag = torch.unsqueeze(t_var, dim=-1) * torch.unsqueeze(d_outer_diag,
