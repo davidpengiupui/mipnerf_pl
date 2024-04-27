@@ -90,8 +90,8 @@ def cast_rays(t_samples, origins, directions, radii, ray_shape, diagonal=True):
     Returns:
         a tuple of arrays of means and covariances.
     """
-    t0 = t_samples[..., :-1]  # [B, n_samples]
-    t1 = t_samples[..., 1:]
+    t0 = t_samples[..., :-1]  # [B, n_samples] # start values of sampling points 
+    t1 = t_samples[..., 1:]   # end values of sampling points
     if ray_shape == 'cone':
         gaussian_fn = conical_frustum_to_gaussian
     elif ray_shape == 'cylinder':
