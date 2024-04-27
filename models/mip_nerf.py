@@ -179,7 +179,7 @@ class MipNerf(torch.nn.Module):
             ret: list, [*(rgb, distance, acc)]
         """
 
-        ret = []
+        ret = [] # use to store results
         t_samples, weights = None, None
         for i_level in range(self.num_levels):
             # key, rng = random.split(rng)
@@ -217,7 +217,7 @@ class MipNerf(torch.nn.Module):
             )  # samples_enc: [B, N, 2*3*L]  L:(max_deg_point - min_deg_point)
 
             # Point attribute predictions
-            if self.use_viewdirs:
+            if self.use_viewdirs: # if use view directions as the conditions
                 viewdirs_enc = pos_enc(
                     rays.viewdirs,
                     min_deg=0,
@@ -234,14 +234,14 @@ class MipNerf(torch.nn.Module):
 
             # Volumetric rendering.
             rgb = self.rgb_activation(raw_rgb)  # [B, N, 3]
-            rgb = rgb * (1 + 2 * self.rgb_padding) - self.rgb_padding
+            rgb = rgb * (1 + 2 * self.rgb_padding) - self.rgb_padding # use to adjust the range of RGB values
             density = self.density_activation(raw_density + self.density_bias)  # [B, N, 1]
             comp_rgb, distance, acc, weights = volumetric_rendering(
-                rgb,
+                rgb, 
                 density,
-                t_samples,
-                rays.directions,
-                white_bkgd=white_bkgd,
+                t_samples, # sampling points
+                rays.directions, # directions of rays
+                white_bkgd=white_bkgd, # use white background or not
             )
             ret.append((comp_rgb, distance, acc, weights, t_samples))
 
