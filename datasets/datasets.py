@@ -232,7 +232,7 @@ class Blender(BaseDataset):
             v / np.linalg.norm(v, axis=-1, keepdims=True) for v in directions
         ]
 
-        def broadcast_scalar_attribute(x):
+        def broadcast_scalar_attribute(x): # funtion to match batch size
             return [
                 x * np.ones_like(origins[i][..., :1])
                 for i in range(len(self.images))
@@ -245,12 +245,12 @@ class Blender(BaseDataset):
         # Distance from each unit-norm direction vector to its x-axis neighbor.
         dx = [
             np.sqrt(np.sum((v[:-1, :, :] - v[1:, :, :]) ** 2, -1)) for v in directions
-        ]
+        ] # direction difference between nearby directions
         dx = [np.concatenate([v, v[-2:-1, :]], 0) for v in dx]
         # Cut the distance in half, and then round it out so that it's
         # halfway between inscribed by / circumscribed about the pixel.
 
-        radii = [v[..., None] * 2 / np.sqrt(12) for v in dx]
+        radii = [v[..., None] * 2 / np.sqrt(12) for v in dx] # compute radius of each ray
 
         self.rays = Rays(
             origins=origins,
